@@ -1,0 +1,33 @@
+{
+  "name": "supreme-suite",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Supreme Suite by J Supreme Tech — white-label vertical CRM platform with industry packs, branded website templates, and 3-day trials.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "smoke": "node _build/smoke.mjs",
+    "docs:health": "node _build/smoke.mjs --write"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.563.0",
+    "next": "^16.2.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "recharts": "^3.5.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^16.2.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

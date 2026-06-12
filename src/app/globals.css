@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   SUPREME SUITE — DESIGN TOKENS
+   Two brand layers:
+   1. HOUSE (J Supreme Tech) — pure mono B&W. Used on the catalog/marketing.
+   2. WHITE-LABEL (tenant) — runtime CSS vars (--brand*) set by <BrandProvider>.
+      Declared with `@theme inline` so utilities compile to var() references and
+      re-skin live when a client picks their color/logo.
+============================================================================ */
+
+@theme {
+  /* Ink scale (house mono) */
+  --color-ink: #0a0a0b;
+  --color-ink-2: #18181b;
+  --color-ink-3: #27272a;
+  --color-muted: #71717a;
+  --color-muted-2: #a1a1aa;
+  --color-line: #e4e4e7;
+  --color-line-2: #f0f0f1;
+  --color-surface: #ffffff;
+  --color-surface-2: #fafafa;
+  --color-surface-3: #f4f4f5;
+  --color-surface-ink: #0a0a0b;
+
+  /* Semantic status (shared across all packs) */
+  --color-ok: #16a34a;
+  --color-ok-soft: #ecfdf3;
+  --color-warn: #d97706;
+  --color-warn-soft: #fffbeb;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
+  --color-info: #2563eb;
+  --color-info-soft: #eff6ff;
+
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display: "Space Grotesk", "Sora", "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+}
+
+/* White-label brand — substituted inline so `bg-brand` => var(--brand). */
+@theme inline {
+  --color-brand: var(--brand, #0a0a0b);
+  --color-brand-strong: var(--brand-strong, #000000);
+  --color-brand-fg: var(--brand-fg, #ffffff);
+  --color-brand-soft: var(--brand-soft, #f4f4f5);
+  --color-brand-ring: var(--brand-ring, rgba(10, 10, 11, 0.12));
+  --color-brand-muted: var(--brand-muted, #6b7280);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: #fff;
+  }
+  /* Brand-scoped selection inside tenant apps */
+  [data-brand-scope] ::selection {
+    background: var(--brand, #0a0a0b);
+    color: var(--brand-fg, #fff);
+  }
+  * {
+    border-color: var(--color-line);
+  }
+}
+
+@layer utilities {
+  .container-x {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-x { padding-inline: 2rem; }
+  }
+  .container-wide {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-wide { padding-inline: 2rem; }
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .hairline { height: 1px; background: var(--color-line); }
+
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-scroll::-webkit-scrollbar { height: 8px; }
+  .table-scroll::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 4px; }
+
+  /* Subtle dotted blueprint background for premium empty states / heroes */
+  .grid-dots {
+    background-image: radial-gradient(rgba(10, 10, 11, 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .grid-lines {
+    background-image:
+      linear-gradient(rgba(10, 10, 11, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(10, 10, 11, 0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .brand-gradient {
+    background-image: linear-gradient(135deg, var(--brand, #0a0a0b), color-mix(in srgb, var(--brand, #0a0a0b) 72%, #000));
+  }
+  .glass {
+    background: color-mix(in srgb, var(--color-surface) 78%, transparent);
+    backdrop-filter: saturate(160%) blur(12px);
+  }
+  .shadow-card { box-shadow: 0 1px 2px rgba(10,10,11,0.04), 0 8px 24px -12px rgba(10,10,11,0.12); }
+  .shadow-pop  { box-shadow: 0 12px 40px -12px rgba(10,10,11,0.22); }
+  .animate-rise { animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}
