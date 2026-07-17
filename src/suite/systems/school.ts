@@ -55,7 +55,7 @@ export const school: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "invoices", "reports", "chatbot", "website", "settings",
+    "invoices", "reports", "chatbot", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -130,11 +130,11 @@ export const school: SystemDef = {
     },
     bookingTitle: "Apply or book a visit",
     bookingBlurb: "Tell us about your child and the program you're considering — we'll arrange an assessment and a campus tour.",
-    heroImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1600&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

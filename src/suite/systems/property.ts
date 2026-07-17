@@ -54,7 +54,7 @@ export const property: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "invoices", "reports", "chatbot", "voice", "website", "settings",
+    "invoices", "reports", "chatbot", "voice", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -128,11 +128,11 @@ export const property: SystemDef = {
     },
     bookingTitle: "Request a quote or viewing",
     bookingBlurb: "Owners, tenants and applicants — tell us what you need and we'll respond within one business day.",
-    heroImage: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

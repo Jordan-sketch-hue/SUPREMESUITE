@@ -3,7 +3,7 @@
 /* Workspace dashboard — KPI row, charts, mini funnel, activity, quick actions. */
 
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Inbox, Plus, Sparkles } from "lucide-react";
+import { ArrowRight, Check, ExternalLink, Inbox, Pencil, Plus, Sparkles } from "lucide-react";
 import type { Booking, CrmRecord, Customer, Invoice, Message, MetricContext } from "@/suite/types";
 import { useCol } from "@/suite/lib/store";
 import { trailingDays, money, compact, relTime, pct } from "@/suite/lib/format";
@@ -185,18 +185,95 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Demo hint */}
-      {tenant?.slug.startsWith("demo-") && (
-        <Card className="mt-4 border-brand-ring bg-brand-softer">
-          <div className="flex flex-wrap items-center gap-3 px-5 py-4">
-            <Sparkles className="size-5 text-brand" />
-            <p className="flex-1 text-sm text-ink-3">
-              You're exploring the <strong>{system.name}</strong> demo with realistic sample data. Like it? Make your own
-              branded workspace in under a minute.
-            </p>
-            <Link href={`/start?system=${system.slug}`}>
-              <Button size="sm">Start my 3-day trial</Button>
-            </Link>
+      {/* Website preview card */}
+      {tenant && (
+        <Card className="mt-4">
+          <CardHeader
+            title="Your branded public website"
+            sub={`Live at /site/${tenant.slug} — customers book directly here`}
+            action={
+              <div className="flex gap-2">
+                <Link href={`${base}/website`}>
+                  <Button variant="outline" size="sm">
+                    <Pencil className="size-4" /> Edit website
+                  </Button>
+                </Link>
+                <a href={`/site/${tenant.slug}`} target="_blank" rel="noreferrer">
+                  <Button size="sm">
+                    <ExternalLink className="size-4" /> Open live
+                  </Button>
+                </a>
+              </div>
+            }
+          />
+          <div className="grid gap-5 px-5 pb-5 lg:grid-cols-[1.6fr_1fr]">
+            {/* Scaled-down live preview */}
+            <div className="relative overflow-hidden rounded-xl border border-line bg-white shadow-sm" style={{ height: 300 }}>
+              <div style={{ transform: "scale(0.5)", transformOrigin: "top left", width: "200%", height: "200%", pointerEvents: "none" }}>
+                <iframe
+                  src={`/site/${tenant.slug}`}
+                  title="Website preview"
+                  className="block w-full border-none"
+                  style={{ height: 600 }}
+                />
+              </div>
+              {/* Click blocker so the iframe doesn't swallow dashboard events */}
+              <div className="absolute inset-0 cursor-default" />
+            </div>
+
+            {/* What's customizable */}
+            <div className="flex flex-col gap-4">
+              <div>
+                <p className="mb-2.5 text-sm font-semibold">Everything you can customize:</p>
+                <ul className="space-y-2 text-[13px] text-ink-3">
+                  {[
+                    "Your logo & brand colors",
+                    "Hero headline & sub-copy",
+                    "Services list & pricing",
+                    "Phone number & location",
+                    "About your business",
+                    "Custom domain (yourbrand.com)",
+                    "Photos & hero images",
+                    "AI chatbot personality",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <Check className="size-3.5 shrink-0 text-ok" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {tenant.slug.startsWith("demo-") ? (
+                <div className="mt-auto space-y-2">
+                  <p className="text-[11px] text-muted">
+                    This is the <strong>{system.name}</strong> demo — sample data, your branding in
+                    under a minute.
+                  </p>
+                  <Link href={`/start?system=${system.slug}`}>
+                    <Button className="w-full">
+                      <Sparkles className="size-4" /> Claim &amp; customize this website
+                    </Button>
+                  </Link>
+                  <Link href={`/start?system=${system.slug}`} className="block text-center text-[11px] text-muted hover:underline">
+                    3-day free trial · no credit card
+                  </Link>
+                </div>
+              ) : (
+                <div className="mt-auto space-y-2">
+                  <Link href={`${base}/website`}>
+                    <Button className="w-full" size="sm">
+                      <Pencil className="size-4" /> Edit website content
+                    </Button>
+                  </Link>
+                  <Link href={`${base}/settings`}>
+                    <Button variant="outline" className="w-full" size="sm">
+                      Upload logo &amp; brand colors
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </Card>
       )}

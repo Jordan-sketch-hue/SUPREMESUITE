@@ -6,14 +6,26 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, Check, Rocket, UploadCloud } from "lucide-react";
-import type { BrandConfig } from "@/suite/types";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Link2, Rocket, UploadCloud } from "lucide-react";
+import type { ApiConnection, BrandConfig } from "@/suite/types";
 import { SYSTEMS, getSystem } from "@/suite/systems";
 import { createTenant } from "@/suite/lib/ops";
 import { BRAND_PRESETS, DEFAULT_BRAND } from "@/suite/lib/brand";
 import { Badge, Button, Card, cx, Field, Input } from "@/suite/components/ui";
 
-const STEPS = ["Choose system", "Your business", "Make it yours", "Launch"];
+const STEPS = ["Choose system", "Your business", "Make it yours", "Connect tools", "Launch"];
+
+/* Quick-connect integrations shown during onboarding */
+const QUICK_INTEGRATIONS = [
+  { id: "whatsapp", name: "WhatsApp Business", logo: "💬", fields: ["phoneId", "token"] },
+  { id: "stripe", name: "Stripe", logo: "💳", fields: ["publishable", "secret"] },
+  { id: "wipay", name: "WiPay (JMD)", logo: "🇯🇲", fields: ["accountNumber", "apiKey"] },
+  { id: "meta", name: "Meta / Instagram", logo: "📘", fields: ["pageToken", "pageId"] },
+  { id: "mailchimp", name: "Mailchimp", logo: "📧", fields: ["apiKey", "listId"] },
+  { id: "google-calendar", name: "Google Calendar", logo: "📅", fields: ["apiKey", "calendarId"] },
+  { id: "slack", name: "Slack Alerts", logo: "💼", fields: ["webhookUrl"] },
+  { id: "zapier", name: "Zapier", logo: "⚡", fields: ["webhookUrl"] },
+];
 
 function StartWizard() {
   const router = useRouter();
@@ -24,17 +36,27 @@ function StartWizard() {
   const [systemSlug, setSystemSlug] = useState<string>("");
   const [biz, setBiz] = useState({ businessName: "", ownerName: "", email: "", phone: "", city: "" });
   const [brand, setBrand] = useState<BrandConfig>({ ...DEFAULT_BRAND });
+  const [apiConnections, setApiConnections] = useState<ApiConnection[]>([]);
+  const [connectingId, setConnectingId] = useState<string | null>(null);
+  const [connFields, setConnFields] = useState<Record<string, string>>({});
   const [launching, setLaunching] = useState(false);
   const [error, setError] = useState("");
+  const presetApplied = useRef(false);
 
+  // Apply a ?system= preset exactly once. Without this guard the effect re-ran on
+  // every render (useSearchParams returns a fresh identity each pass) and setBrand
+  // created a new object each time → infinite render loop that froze the page.
+  // Read the raw value so `search` doesn't need to be a reactive dependency.
+  const presetSystem = search.get("system");
   useEffect(() => {
-    const pre = search.get("system");
-    if (pre && SYSTEMS.some((s) => s.slug === pre)) {
-      setSystemSlug(pre);
-      setBrand((b) => ({ ...b, color: getSystem(pre).accent }));
+    if (presetApplied.current || !presetSystem) return;
+    if (SYSTEMS.some((s) => s.slug === presetSystem)) {
+      presetApplied.current = true;
+      setSystemSlug(presetSystem);
+      setBrand((b) => ({ ...b, color: getSystem(presetSystem).accent }));
       setStep(1);
     }
-  }, [search]);
+  }, [presetSystem]);
 
   const system = systemSlug ? getSystem(systemSlug) : null;
 
@@ -50,19 +72,40 @@ function StartWizard() {
     reader.readAsDataURL(file);
   };
 
+  const saveQuickConnect = () => {
+    if (!connectingId) return;
+    const conn: ApiConnection = {
+      id: connectingId,
+      connectedAt: Date.now(),
+      status: "connected",
+      fields: connFields,
+    };
+    setApiConnections((prev) => [...prev.filter((c) => c.id !== connectingId), conn]);
+    setConnectingId(null);
+    setConnFields({});
+  };
+
   const launch = () => {
     if (!system) return;
     setLaunching(true);
-    const tenant = createTenant({
-      businessName: biz.businessName || `${system.shortName} Co.`,
-      systemSlug: system.slug,
-      ownerName: biz.ownerName,
-      email: biz.email,
-      phone: biz.phone || undefined,
-      city: biz.city || undefined,
-      brand,
-    });
-    setTimeout(() => router.push(`/app/${tenant.slug}`), 700);
+    setError("");
+    try {
+      const tenant = createTenant({
+        businessName: biz.businessName || `${system.shortName} Co.`,
+        systemSlug: system.slug,
+        ownerName: biz.ownerName,
+        email: biz.email,
+        phone: biz.phone || undefined,
+        city: biz.city || undefined,
+        brand,
+        apiConnections,
+      });
+      setTimeout(() => router.push(`/app/${tenant.slug}`), 700);
+    } catch (err) {
+      console.error("Launch failed:", err);
+      setError("Something went wrong building your workspace. Please try again.");
+      setLaunching(false);
+    }
   };
 
   const canNext =
@@ -289,8 +332,52 @@ function StartWizard() {
         </div>
       )}
 
-      {/* Step 3 — review & launch */}
+      {/* Step 3 — connect tools */}
       {step === 3 && system && (
+        <div className="animate-rise mx-auto max-w-2xl">
+          <p className="mb-1 text-center text-sm font-medium">Connect your existing tools <span className="text-muted">(optional — skip if you want to add later)</span></p>
+          <p className="mb-6 text-center text-[12px] text-muted">All credentials stay local during your trial. They move to an encrypted vault when you go live.</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {QUICK_INTEGRATIONS.map((qi) => {
+              const connected = apiConnections.find((c) => c.id === qi.id);
+              const isActive = connectingId === qi.id;
+              return (
+                <Card key={qi.id} className={cx("p-4", connected && "border-ok/40 bg-ok-soft")}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{qi.logo}</span>
+                    <div className="flex-1 leading-tight">
+                      <p className="text-[13px] font-semibold">{qi.name}</p>
+                      {connected && <p className="flex items-center gap-1 text-[10px] text-ok"><CheckCircle2 className="size-3" /> Connected</p>}
+                    </div>
+                    {!isActive && (
+                      <Button size="sm" variant={connected ? "outline" : "brand"}
+                        onClick={() => { setConnectingId(qi.id); setConnFields(connected?.fields ?? {}); }}>
+                        <Link2 className="size-3.5" /> {connected ? "Edit" : "Connect"}
+                      </Button>
+                    )}
+                  </div>
+                  {isActive && (
+                    <div className="mt-3 space-y-2 border-t border-line pt-3">
+                      {qi.fields.map((fk) => (
+                        <Input key={fk} placeholder={fk} value={connFields[fk] ?? ""}
+                          onChange={(e) => setConnFields((p) => ({ ...p, [fk]: e.target.value }))} />
+                      ))}
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={saveQuickConnect}><Check className="size-3.5" /> Save</Button>
+                        <Button size="sm" variant="ghost" onClick={() => setConnectingId(null)}>Cancel</Button>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+          <p className="mt-4 text-center text-[11px] text-muted">More integrations available inside Settings → Integrations after launch.</p>
+        </div>
+      )}
+
+      {/* Step 4 — review & launch */}
+      {step === 4 && system && (
         <Card className="animate-rise mx-auto max-w-xl p-8 text-center">
           <span className="mx-auto flex size-16 items-center justify-center rounded-3xl" style={{ background: `${brand.color}18` }}>
             <Rocket className="size-8" style={{ color: brand.color }} />
@@ -302,6 +389,7 @@ function StartWizard() {
               ["Branded public website", "with a booking form wired to your inbox"],
               ["AI chatbot + voice agent", "answering & booking 24/7"],
               ["Starter demo data", "so every screen makes sense (clear it anytime)"],
+              ...(apiConnections.length > 0 ? [[`${apiConnections.length} integration${apiConnections.length > 1 ? "s" : ""} connected`, apiConnections.map(c => c.id).join(", ")]] : []),
               ["3-day free trial", "no card — continue only if you love it"],
             ].map(([t, b]) => (
               <p key={t} className="flex items-start gap-2.5">
@@ -315,6 +403,7 @@ function StartWizard() {
           <Button size="lg" className="mt-7 w-full" style={{ background: brand.color, color: "#fff" }} disabled={launching} onClick={launch}>
             {launching ? "Building your workspace…" : "Launch my workspace 🚀"}
           </Button>
+          {error && <p className="mt-3 text-xs text-danger">{error}</p>}
           <p className="mt-3 text-[11px] text-muted">Created instantly on this device. Cloud sync + team logins activate when you continue after the trial.</p>
         </Card>
       )}

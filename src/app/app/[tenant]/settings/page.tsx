@@ -4,7 +4,7 @@
    plan & trial, data export/import, danger zone. */
 
 import { useEffect, useRef, useState } from "react";
-import { Download, Palette, Save, Upload, UploadCloud } from "lucide-react";
+import { Download, LogOut, Palette, Save, Upload, UploadCloud } from "lucide-react";
 import type { BrandConfig } from "@/suite/types";
 import { saveTenant, deleteTenant, exportTenantJson, importTenantJson } from "@/suite/lib/store";
 import { BRAND_PRESETS } from "@/suite/lib/brand";
@@ -273,6 +273,24 @@ export default function SettingsPage() {
               />
               <Button variant="outline" size="sm" onClick={() => importRef.current?.click()}>
                 <Upload className="size-4" /> Import backup
+              </Button>
+            </div>
+          </Card>
+
+          {/* Sign out (paid tenants with ss_auth cookie) */}
+          <Card>
+            <CardHeader title="Account" />
+            <div className="flex items-center justify-between gap-3 px-5 pb-5">
+              <p className="text-[12px] text-muted">Sign out of this workspace on this device.</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  await fetch("/api/auth/logout", { method: "POST" });
+                  router.push("/app/login");
+                }}
+              >
+                <LogOut className="size-4" /> Sign out
               </Button>
             </div>
           </Card>

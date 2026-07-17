@@ -32,6 +32,14 @@ export const metadata: Metadata = {
       "One engine, every industry. Branded CRM + website templates with a 3-day free trial.",
     type: "website",
   },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: { url: "/icons/icon-192.png", sizes: "192x192" },
+    shortcut: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

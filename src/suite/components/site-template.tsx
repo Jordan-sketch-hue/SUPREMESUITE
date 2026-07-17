@@ -142,7 +142,7 @@ export function SiteTemplate({ tenant, system }: { tenant: Tenant; system: Syste
           </div>
           <div className="relative hidden md:block">
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-pop">
-              <Image src={t.heroImage} alt={`${tenant.businessName} hero`} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" priority />
+              <Image src={t.heroImage} alt={`${tenant.businessName} hero`} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" priority unoptimized />
             </div>
             <div className={cx("absolute -bottom-5 -left-5 rounded-2xl px-5 py-3.5 shadow-pop", dark ? "bg-white text-ink" : "bg-ink text-white")}>
               <p className="flex items-center gap-1.5 text-sm font-bold">
@@ -198,7 +198,7 @@ export function SiteTemplate({ tenant, system }: { tenant: Tenant; system: Syste
           <div className="grid grid-cols-2 gap-3">
             {t.gallery.slice(0, 2).map((g, i) => (
               <div key={i} className={cx("relative overflow-hidden rounded-2xl", i === 0 ? "aspect-[3/4]" : "mt-8 aspect-[3/4]")}>
-                <Image src={g} alt="" fill sizes="(min-width: 1024px) 30vw, 50vw" className="object-cover" />
+                <Image src={g} alt="" fill sizes="(min-width: 1024px) 30vw, 50vw" className="object-cover" unoptimized />
               </div>
             ))}
           </div>

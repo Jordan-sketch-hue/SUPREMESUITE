@@ -57,7 +57,7 @@ export const movers: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "inventory", "invoices", "loyalty", "reports", "chatbot", "voice", "website", "settings",
+    "inventory", "invoices", "loyalty", "reports", "chatbot", "voice", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -134,11 +134,11 @@ export const movers: SystemDef = {
     },
     bookingTitle: "Get your free quote",
     bookingBlurb: "Tell us what's moving and where — we'll confirm a survey or send your estimate within one business day.",
-    heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

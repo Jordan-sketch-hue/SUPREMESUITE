@@ -55,7 +55,7 @@ export const restaurant: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "inventory", "invoices", "loyalty", "reports", "chatbot", "voice", "website", "settings",
+    "inventory", "invoices", "loyalty", "reports", "chatbot", "voice", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -128,11 +128,11 @@ export const restaurant: SystemDef = {
     },
     bookingTitle: "Reserve your table",
     bookingBlurb: "Tell us your date, time and party size — we'll confirm by message within the hour during service days.",
-    heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

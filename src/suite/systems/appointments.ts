@@ -54,7 +54,7 @@ export const appointments: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "invoices", "loyalty", "reports", "chatbot", "voice", "website", "settings",
+    "invoices", "loyalty", "reports", "chatbot", "voice", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -131,8 +131,8 @@ export const appointments: SystemDef = {
     bookingBlurb: "Pick a service and a time that suits you — we'll confirm right away and remind you before you're due.",
     heroImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
     ],
   },

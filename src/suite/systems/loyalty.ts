@@ -60,7 +60,7 @@ export const loyalty: SystemDef = {
   recordIcon: Gift,
 
   modules: [
-    "dashboard", "records", "customers", "messages", "loyalty", "reports", "chatbot", "website", "settings",
+    "dashboard", "records", "customers", "messages", "loyalty", "reports", "chatbot", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -127,9 +127,9 @@ export const loyalty: SystemDef = {
     bookingBlurb: "Sign up in 20 seconds — points start with your very next visit.",
     heroImage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

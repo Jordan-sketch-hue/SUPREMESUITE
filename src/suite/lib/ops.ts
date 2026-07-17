@@ -40,6 +40,7 @@ export interface CreateTenantInput {
   brand?: Partial<BrandConfig>;
   slugOverride?: string;
   seed?: boolean;
+  apiConnections?: import("../types").ApiConnection[];
 }
 
 export function createTenant(input: CreateTenantInput): Tenant {
@@ -62,9 +63,19 @@ export function createTenant(input: CreateTenantInput): Tenant {
     trialStartedAt: Date.now(),
     createdAt: Date.now(),
     addOns: [],
+    apiConnections: input.apiConnections ?? [],
   };
   saveTenant(tenant);
-  if (input.seed !== false) seedTenant(tenant, system);
+  // Seeding must never block workspace creation — a bug in one system's demo
+  // data would otherwise throw here and hang the launch wizard. Degrade to an
+  // empty (but fully usable) workspace instead of crashing.
+  if (input.seed !== false) {
+    try {
+      seedTenant(tenant, system);
+    } catch (err) {
+      console.error(`seedTenant failed for ${system.slug}:`, err);
+    }
+  }
   return tenant;
 }
 

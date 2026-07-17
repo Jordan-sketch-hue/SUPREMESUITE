@@ -40,6 +40,7 @@ export type SystemModule =
   | "chatbot"
   | "voice"
   | "website" // the branded public site template
+  | "integrations" // API connections & data import/export
   | "settings";
 
 /* ---- Fields & pipeline ------------------------------------------------ */
@@ -237,6 +238,16 @@ export interface BrandConfig {
   font: "modern" | "grotesk" | "classic";
 }
 
+export type IntegrationStatus = "connected" | "error" | "pending";
+
+export interface ApiConnection {
+  id: string; // e.g. "whatsapp", "stripe", "meta"
+  connectedAt: number;
+  status: IntegrationStatus;
+  /** Encrypted client-side; moves to a secrets vault on production. */
+  fields: Record<string, string>; // e.g. { apiKey: "...", phoneId: "..." }
+}
+
 export interface Tenant {
   id: string;
   slug: string;
@@ -255,6 +266,8 @@ export interface Tenant {
   installedAt?: number;
   /** Enabled add-on slugs purchased on top of the base system. */
   addOns: string[];
+  /** Connected third-party API integrations. */
+  apiConnections?: ApiConnection[];
   /** Owner edits to the public website (merged over the pack's template). */
   site?: Partial<
     Pick<

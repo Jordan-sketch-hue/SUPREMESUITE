@@ -52,7 +52,7 @@ export const courier: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "invoices", "loyalty", "reports", "chatbot", "voice", "website", "settings",
+    "invoices", "loyalty", "reports", "chatbot", "voice", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -131,9 +131,9 @@ export const courier: SystemDef = {
     bookingBlurb: "Tell us what's moving and we'll confirm your pickup window within the hour.",
     heroImage: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1605732562742-3023a888e56e?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

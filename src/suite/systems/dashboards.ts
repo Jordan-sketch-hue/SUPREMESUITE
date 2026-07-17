@@ -60,7 +60,7 @@ export const dashboards: SystemDef = {
   recordNoun: { singular: "Dashboard", plural: "Dashboards" },
   recordIcon: BarChart3,
 
-  modules: ["dashboard", "records", "customers", "messages", "reports", "chatbot", "website", "settings"],
+  modules: ["dashboard", "records", "customers", "messages", "reports", "chatbot", "website", "integrations", "settings"],
 
   pipeline: PIPELINE,
 
@@ -127,9 +127,9 @@ export const dashboards: SystemDef = {
     bookingBlurb: "Tell us what you're tracking (or wish you were) — we'll scope it within a day.",
     heroImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1543286386-713bdd548da4?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

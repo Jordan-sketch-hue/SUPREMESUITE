@@ -30,6 +30,7 @@ export const ROUTES: RouteSpec[] = [
   { path: "/start", group: "Catalog", title: "Onboarding wizard", expects: ["Launch your workspace"] },
   { path: "/status", group: "Platform", title: "Self-check portal", expects: ["System check"] },
   { path: "/docs", group: "Platform", title: "Documentation", expects: ["Documentation"] },
+  { path: "/app/login", group: "Auth", title: "Tenant login", expects: ["Sign in", "Supreme Suite"] },
 
   // Tenant app engine (white-labeled)
   { path: "/app/:tenant", sample: `/app/${DEMO_TENANT}`, group: "App", title: "Dashboard", expects: ["Dashboard"], dynamic: true },

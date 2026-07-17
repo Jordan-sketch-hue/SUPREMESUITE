@@ -23,6 +23,7 @@ import {
   LineChart,
   Menu,
   MessagesSquare,
+  Plug,
   Settings,
   Users,
   X,
@@ -50,12 +51,13 @@ const MODULE_NAV: Partial<
   chatbot: { label: () => "AI Chatbot", icon: Bot, path: "/chatbot" },
   voice: { label: () => "Voice Agent", icon: AudioLines, path: "/voice" },
   website: { label: () => "Website", icon: Globe, path: "/website" },
+  integrations: { label: () => "Integrations", icon: Plug, path: "/integrations" },
   settings: { label: () => "Settings", icon: Settings, path: "/settings" },
 };
 
 const ORDER: SystemModule[] = [
   "dashboard", "records", "calendar", "bookings", "customers", "messages",
-  "inventory", "invoices", "loyalty", "reports", "chatbot", "voice", "website", "settings",
+  "inventory", "invoices", "loyalty", "reports", "chatbot", "voice", "website", "integrations", "settings",
 ];
 
 /* Safe label target while the tenant/system is still resolving (SSR pass). */

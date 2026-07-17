@@ -57,7 +57,7 @@ export const chatbot: SystemDef = {
   recordNoun: { singular: "Conversation", plural: "Conversations" },
   recordIcon: MessageSquare,
 
-  modules: ["dashboard", "records", "customers", "messages", "bookings", "reports", "chatbot", "website", "settings"],
+  modules: ["dashboard", "records", "customers", "messages", "bookings", "reports", "chatbot", "website", "integrations", "settings"],
 
   pipeline: PIPELINE,
 
@@ -120,11 +120,11 @@ export const chatbot: SystemDef = {
     },
     bookingTitle: "Request your assistant",
     bookingBlurb: "Tell us what you want it to handle — we'll have a trained demo for you within 48 hours.",
-    heroImage: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?q=80&w=1600&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1587560699334-cc4ff634909a?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1526378722484-bd91ca387e72?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

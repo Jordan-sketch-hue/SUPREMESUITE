@@ -54,7 +54,7 @@ export const warehouse: SystemDef = {
 
   modules: [
     "dashboard", "records", "calendar", "bookings", "customers", "messages",
-    "inventory", "invoices", "reports", "chatbot", "website", "settings",
+    "inventory", "invoices", "reports", "chatbot", "website", "integrations", "settings",
   ],
 
   pipeline: PIPELINE,
@@ -130,9 +130,9 @@ export const warehouse: SystemDef = {
     bookingBlurb: "Tell us your volumes and start date — we'll respond with availability and a rate card within one business day.",
     heroImage: "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
     ],
   },
 

@@ -7,6 +7,7 @@
 import { useEffect, useMemo } from "react";
 import type { Tenant } from "../types";
 import { brandVars } from "../lib/brand";
+import { trySystem } from "../systems";
 
 function setLink(rel: string, href: string, id: string) {
   let el = document.querySelector<HTMLLinkElement>(`link[data-ss="${id}"]`);
@@ -58,7 +59,7 @@ export function BrandProvider({
   );
 }
 
-/** Tenant logo with graceful monogram fallback. */
+/** Tenant logo — shows uploaded logo, or the system icon, or a letter as last resort. */
 export function TenantLogo({ tenant, size = 36, className }: { tenant: Tenant | null; size?: number; className?: string }) {
   if (tenant?.brand.logoDataUrl) {
     return (
@@ -71,13 +72,21 @@ export function TenantLogo({ tenant, size = 36, className }: { tenant: Tenant | 
       />
     );
   }
-  const letter = (tenant?.businessName ?? "S")[0]?.toUpperCase();
+  const sys = trySystem(tenant?.systemSlug);
+  const Icon = sys?.icon;
+  const iconPx = Math.round(size * 0.52);
   return (
     <span
       style={{ width: size, height: size }}
-      className={`flex items-center justify-center rounded-xl bg-brand font-display text-base font-bold text-brand-fg ${className ?? ""}`}
+      className={`flex items-center justify-center rounded-xl bg-brand text-brand-fg ${className ?? ""}`}
     >
-      {letter}
+      {Icon ? (
+        <Icon style={{ width: iconPx, height: iconPx }} />
+      ) : (
+        <span className="font-display font-bold" style={{ fontSize: Math.round(size * 0.42) }}>
+          {(tenant?.businessName ?? "S")[0]?.toUpperCase()}
+        </span>
+      )}
     </span>
   );
 }

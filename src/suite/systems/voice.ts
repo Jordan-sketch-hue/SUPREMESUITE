@@ -57,7 +57,7 @@ export const voice: SystemDef = {
   recordNoun: { singular: "Call", plural: "Calls" },
   recordIcon: AudioLines,
 
-  modules: ["dashboard", "records", "customers", "messages", "bookings", "reports", "voice", "chatbot", "website", "settings"],
+  modules: ["dashboard", "records", "customers", "messages", "bookings", "reports", "voice", "chatbot", "website", "integrations", "settings"],
 
   pipeline: PIPELINE,
 
@@ -120,11 +120,11 @@ export const voice: SystemDef = {
     },
     bookingTitle: "Set up my voice agent",
     bookingBlurb: "Tell us your call volume and what it should handle — demo within 48 hours.",
-    heroImage: "https://images.unsplash.com/photo-1590650153855-d9e808231d41?q=80&w=1600&auto=format&fit=crop",
+    heroImage: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop",
     gallery: [
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1525130413817-d45c1d127c42?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop",
     ],
   },
 
