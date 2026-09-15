@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 /* Invoices — list, builder with auto-totals, status flow, branded print view. */
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { BadgeDollarSign, Plus, Printer, Trash2 } from "lucide-react";
 import type { Customer, Invoice } from "@/suite/types";
 import { useCol } from "@/suite/lib/store";
@@ -16,6 +16,14 @@ import { TenantLogo } from "@/suite/components/brand-provider";
 
 const STATUS_TONE = { draft: "neutral", sent: "info", paid: "ok", overdue: "danger" } as const;
 
+async function persistStatus(slug: string, invoiceId: string, status: string) {
+  await fetch(`/api/workspace/${encodeURIComponent(slug)}/invoice-status`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ invoice_id: invoiceId, status }),
+  });
+}
+
 export default function InvoicesPage() {
   const { tenant, system } = useWorkspace();
   const toast = useToast();
@@ -25,6 +33,26 @@ export default function InvoicesPage() {
   const [printing, setPrinting] = useState<Invoice | null>(null);
   const [customerId, setCustomerId] = useState("");
   const [items, setItems] = useState<Invoice["items"]>([{ label: "", qty: 1, unit: 0 }]);
+
+  /* On mount: pull server-side overrides and apply them to localStorage so
+     paid invoices survive browser data clears and cross-device sessions. */
+  const applyOverrides = useCallback(async () => {
+    if (!tenant) return;
+    try {
+      const res = await fetch(`/api/workspace/${encodeURIComponent(tenant.slug)}/invoice-status`);
+      if (!res.ok) return;
+      const { overrides } = await res.json() as { overrides: { invoice_id: string; status: string }[] };
+      for (const { invoice_id, status } of overrides) {
+        setInvoiceStatus(tenant, invoice_id, status as Invoice["status"]);
+      }
+    } catch {
+      // silently ignore — localStorage data is still shown
+    }
+  }, [tenant]);
+
+  useEffect(() => {
+    applyOverrides();
+  }, [applyOverrides]);
 
   const totals = useMemo(() => {
     const paid = invoices.filter((i) => i.status === "paid").reduce((s, i) => s + i.amount, 0);
@@ -48,9 +76,19 @@ export default function InvoicesPage() {
       status,
     });
     toast(`${inv.number} ${status === "draft" ? "saved" : "sent"} — ${money(inv.amount)}`);
+    if (status !== "draft") {
+      persistStatus(tenant.slug, inv.id, status).catch(() => {});
+    }
     setBuilding(false);
     setItems([{ label: "", qty: 1, unit: 0 }]);
     setCustomerId("");
+  };
+
+  const markStatus = (inv: Invoice, status: Invoice["status"], label: string) => {
+    if (!tenant) return;
+    setInvoiceStatus(tenant, inv.id, status);
+    toast(label);
+    persistStatus(tenant.slug, inv.id, status).catch(() => {});
   };
 
   return (
@@ -102,12 +140,12 @@ export default function InvoicesPage() {
                   <Td>
                     <span className="flex items-center gap-1.5">
                       {inv.status !== "paid" && tenant && (
-                        <Button variant="outline" size="sm" onClick={() => { setInvoiceStatus(tenant, inv.id, "paid"); toast(`${inv.number} marked paid 🎉`); }}>
+                        <Button variant="outline" size="sm" onClick={() => markStatus(inv, "paid", `${inv.number} marked paid`)}>
                           Mark paid
                         </Button>
                       )}
                       {inv.status === "draft" && tenant && (
-                        <Button variant="ghost" size="sm" onClick={() => { setInvoiceStatus(tenant, inv.id, "sent"); toast("Sent"); }}>
+                        <Button variant="ghost" size="sm" onClick={() => markStatus(inv, "sent", "Sent")}>
                           Send
                         </Button>
                       )}

@@ -1,10 +1,10 @@
-/**
- * supabase.ts — Supabase REST client for paid tenant lookups. SERVER ONLY.
- * Uses the PostgREST HTTP API directly (no SDK — keeps supreme-suite dependency-free).
+﻿/**
+ * supabase.ts â€” Supabase REST client for paid tenant lookups. SERVER ONLY.
+ * Uses the PostgREST HTTP API directly (no SDK â€” keeps supreme-suite dependency-free).
  *
  * Required env vars:
- *   NEXT_PUBLIC_SUPABASE_URL  — https://ciggiwpztuxkmbaccrlp.supabase.co
- *   SUPABASE_SERVICE_ROLE_KEY — service role key (bypasses RLS)
+ *   NEXT_PUBLIC_SUPABASE_URL  â€” https://ciggiwpztuxkmbaccrlp.supabase.co
+ *   SUPABASE_SERVICE_ROLE_KEY â€” service role key (bypasses RLS)
  */
 
 import { createHash, pbkdf2Sync, timingSafeEqual } from "node:crypto";
@@ -25,7 +25,7 @@ export interface SsTenant {
   add_ons: string[];
 }
 
-function headers() {
+export function headers() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY not set");
   return {
@@ -35,7 +35,7 @@ function headers() {
   };
 }
 
-function base(): string {
+export function base(): string {
   const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!u) throw new Error("NEXT_PUBLIC_SUPABASE_URL not set");
   return u;
@@ -70,7 +70,7 @@ export function verifyPassword(plain: string, storedHash: string): boolean {
   return timingSafeEqual(Buffer.from(actual, "hex"), Buffer.from(expected!, "hex"));
 }
 
-// ── Session token (HMAC-SHA256 signed, no JWT library) ─────────────────────
+// â”€â”€ Session token (HMAC-SHA256 signed, no JWT library) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export interface SessionPayload {
   tid: string;   // tenant id
@@ -108,3 +108,4 @@ export function verifySession(token: string): SessionPayload | null {
     return null;
   }
 }
+
