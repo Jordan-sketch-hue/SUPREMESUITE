@@ -1,0 +1,30 @@
+{
+  "name": "supreme-suite",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:migrate": "node scripts/migrate.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "@neondatabase/serverless": "^0.10.4",
+    "@supabase/supabase-js": "^2.114.0",
+    "jose": "^6.2.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4"
+  }
+}
