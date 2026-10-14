@@ -21,6 +21,10 @@ export function useWorkspace(): { slug: string; tenant: Tenant | null; system: S
     if (slug && !tenant) ensureDemoTenant(slug);
   }, [slug, tenant]);
 
-  const system = trySystem(tenant?.systemSlug) ?? getSystem("courier");
+  // For demo-<system> slugs, infer the system pack directly from the URL so
+  // the shell and labels render correctly before the tenant is hydrated from
+  // localStorage (first visit, before ensureDemoTenant fires).
+  const demoSystem = slug.startsWith("demo-") ? trySystem(slug.slice(5)) : null;
+  const system = trySystem(tenant?.systemSlug) ?? demoSystem ?? getSystem("courier");
   return { slug, tenant, system };
 }

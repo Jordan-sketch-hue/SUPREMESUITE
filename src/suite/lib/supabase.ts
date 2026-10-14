@@ -1,13 +1,21 @@
-﻿/**
- * supabase.ts â€” Supabase REST client for paid tenant lookups. SERVER ONLY.
- * Uses the PostgREST HTTP API directly (no SDK â€” keeps supreme-suite dependency-free).
+/**
+ * supabase.ts — Neon DB client for paid tenant lookups. SERVER ONLY.
+ * Migrated from Supabase PostgREST → Neon DB (@neondatabase/serverless).
  *
- * Required env vars:
- *   NEXT_PUBLIC_SUPABASE_URL  â€” https://ciggiwpztuxkmbaccrlp.supabase.co
- *   SUPABASE_SERVICE_ROLE_KEY â€” service role key (bypasses RLS)
+ * Required env var:
+ *   DATABASE_URL — Neon postgres connection string (pooled or direct)
+ *
+ * PBKDF2/HMAC-SHA256 auth helpers stay in this file (no DB dependency).
  */
 
 import { createHash, pbkdf2Sync, timingSafeEqual } from "node:crypto";
+import { neon } from "@neondatabase/serverless";
+
+function getSql() {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL not set");
+  return neon(url);
+}
 
 export interface SsTenant {
   id: string;
@@ -25,36 +33,25 @@ export interface SsTenant {
   add_ons: string[];
 }
 
-export function headers() {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY not set");
-  return {
-    apikey: key,
-    Authorization: `Bearer ${key}`,
-    "Content-Type": "application/json",
-  };
-}
-
-export function base(): string {
-  const u = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!u) throw new Error("NEXT_PUBLIC_SUPABASE_URL not set");
-  return u;
-}
-
 export async function getTenantByEmail(email: string): Promise<SsTenant | null> {
-  const url = `${base()}/rest/v1/ss_tenants?email=eq.${encodeURIComponent(email.toLowerCase())}&limit=1`;
-  const res = await fetch(url, { headers: headers(), cache: "no-store" });
-  if (!res.ok) return null;
-  const rows: SsTenant[] = await res.json();
-  return rows[0] ?? null;
+  const sql = getSql();
+  const rows = await sql`
+    SELECT * FROM ss_tenants WHERE email = ${email.toLowerCase()} LIMIT 1
+  `;
+  return (rows[0] as SsTenant) ?? null;
 }
 
 export async function getTenantBySlug(slug: string): Promise<SsTenant | null> {
-  const url = `${base()}/rest/v1/ss_tenants?slug=eq.${encodeURIComponent(slug)}&limit=1`;
-  const res = await fetch(url, { headers: headers(), cache: "no-store" });
-  if (!res.ok) return null;
-  const rows: SsTenant[] = await res.json();
-  return rows[0] ?? null;
+  const sql = getSql();
+  const rows = await sql`
+    SELECT * FROM ss_tenants WHERE slug = ${slug} LIMIT 1
+  `;
+  return (rows[0] as SsTenant) ?? null;
+}
+
+/** Run a raw parameterized query — use for tables not covered above. */
+export function getSqlClient() {
+  return getSql();
 }
 
 /**
@@ -70,7 +67,7 @@ export function verifyPassword(plain: string, storedHash: string): boolean {
   return timingSafeEqual(Buffer.from(actual, "hex"), Buffer.from(expected!, "hex"));
 }
 
-// â”€â”€ Session token (HMAC-SHA256 signed, no JWT library) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Session token (HMAC-SHA256 signed, no JWT library) ────────────────────────
 
 export interface SessionPayload {
   tid: string;   // tenant id
@@ -83,7 +80,7 @@ export interface SessionPayload {
 const SESSION_TTL = 30 * 24 * 60 * 60; // 30 days
 
 function tokenSecret(): string {
-  return process.env.SS_JWT_SECRET || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "ss-dev-secret-change-me";
+  return process.env.SS_JWT_SECRET || "ss-dev-secret-change-me";
 }
 
 export function signSession(payload: Omit<SessionPayload, "exp">): string {
@@ -108,4 +105,3 @@ export function verifySession(token: string): SessionPayload | null {
     return null;
   }
 }
-

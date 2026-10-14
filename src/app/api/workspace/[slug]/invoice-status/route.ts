@@ -1,5 +1,5 @@
-﻿import { NextRequest, NextResponse } from "next/server";
-import { verifySession, base, headers } from "@/suite/lib/supabase";
+import { NextRequest, NextResponse } from "next/server";
+import { verifySession, getSqlClient } from "@/suite/lib/supabase";
 
 export const runtime = "nodejs";
 
@@ -14,10 +14,11 @@ export async function GET(
     return NextResponse.json({ overrides: [] }, { status: 401 });
   }
   try {
-    const url = `${base()}/rest/v1/ss_invoice_overrides?tenant_slug=eq.${encodeURIComponent(slug)}&select=invoice_id,status`;
-    const res = await fetch(url, { headers: headers(), cache: "no-store" });
-    if (!res.ok) return NextResponse.json({ overrides: [] });
-    const rows = await res.json() as { invoice_id: string; status: string }[];
+    const sql = getSqlClient();
+    const rows = await sql`
+      SELECT invoice_id, status FROM ss_invoice_overrides
+      WHERE tenant_slug = ${slug}
+    `;
     return NextResponse.json({ overrides: rows });
   } catch {
     return NextResponse.json({ overrides: [] });
@@ -39,21 +40,14 @@ export async function POST(
     return NextResponse.json({ error: "invoice_id and status required" }, { status: 400 });
   }
   try {
-    const url = `${base()}/rest/v1/ss_invoice_overrides`;
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { ...headers(), Prefer: "resolution=merge-duplicates" },
-      body: JSON.stringify({
-        tenant_slug: slug,
-        invoice_id: body.invoice_id,
-        status: body.status,
-        updated_at: new Date().toISOString(),
-      }),
-    });
-    if (!res.ok) {
-      const err = await res.text();
-      return NextResponse.json({ error: err }, { status: 500 });
-    }
+    const sql = getSqlClient();
+    await sql`
+      INSERT INTO ss_invoice_overrides (tenant_slug, invoice_id, status, updated_at)
+      VALUES (${slug}, ${body.invoice_id}, ${body.status}, ${new Date().toISOString()})
+      ON CONFLICT (tenant_slug, invoice_id) DO UPDATE SET
+        status = EXCLUDED.status,
+        updated_at = EXCLUDED.updated_at
+    `;
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "db error" }, { status: 500 });

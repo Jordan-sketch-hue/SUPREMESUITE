@@ -5,7 +5,7 @@
    Courier CRM and a School CRM feel purpose-built while sharing one engine. */
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   AudioLines,
@@ -83,7 +83,9 @@ export function AppShell({
     setMobileOpen(false);
   }, [pathname]);
 
-  const base = tenant ? `/app/${tenant.slug}` : "/app/_";
+  const routeParams = useParams<{ tenant: string }>();
+  const urlSlug = typeof routeParams?.tenant === "string" ? routeParams.tenant : "";
+  const base = urlSlug ? `/app/${urlSlug}` : (tenant ? `/app/${tenant.slug}` : "/app/_");
   const modules = (system?.modules ?? ORDER).filter((m) => MODULE_NAV[m]);
   const items = ORDER.filter((m) => modules.includes(m)).map((m) => ({ m, ...MODULE_NAV[m]! }));
 

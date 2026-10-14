@@ -19,11 +19,7 @@ export const config = {
 
 function tokenSecret(): string {
   // Must match the secret used in supabase.ts signSession()
-  return (
-    process.env.SS_JWT_SECRET ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-    "ss-dev-secret-change-me"
-  );
+  return process.env.SS_JWT_SECRET || "ss-dev-secret-change-me";
 }
 
 /** base64 standard → base64url */
