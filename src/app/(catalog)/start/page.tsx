@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
-/* /start — 4-step onboarding wizard.
-   Pick system → business details → brand it (logo/colors/style) → launch.
+/* /start â€” 4-step onboarding wizard.
+   Pick system â†’ business details â†’ brand it (logo/colors/style) â†’ launch.
    Creates the tenant, seeds starter data, starts the 3-day trial. */
 
 import { Suspense, useEffect, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle2, Link2, Rocket, UploadCloud 
 import type { ApiConnection, BrandConfig } from "@/suite/types";
 import { SYSTEMS, getSystem } from "@/suite/systems";
 import { createTenant } from "@/suite/lib/ops";
+import { slugify } from "@/suite/lib/ids";
 import { BRAND_PRESETS, DEFAULT_BRAND } from "@/suite/lib/brand";
 import { Badge, Button, Card, cx, Field, Input } from "@/suite/components/ui";
 
@@ -17,14 +18,14 @@ const STEPS = ["Choose system", "Your business", "Make it yours", "Connect tools
 
 /* Quick-connect integrations shown during onboarding */
 const QUICK_INTEGRATIONS = [
-  { id: "whatsapp", name: "WhatsApp Business", logo: "💬", fields: ["phoneId", "token"] },
-  { id: "stripe", name: "Stripe", logo: "💳", fields: ["publishable", "secret"] },
-  { id: "wipay", name: "WiPay (JMD)", logo: "🇯🇲", fields: ["accountNumber", "apiKey"] },
-  { id: "meta", name: "Meta / Instagram", logo: "📘", fields: ["pageToken", "pageId"] },
-  { id: "mailchimp", name: "Mailchimp", logo: "📧", fields: ["apiKey", "listId"] },
-  { id: "google-calendar", name: "Google Calendar", logo: "📅", fields: ["apiKey", "calendarId"] },
-  { id: "slack", name: "Slack Alerts", logo: "💼", fields: ["webhookUrl"] },
-  { id: "zapier", name: "Zapier", logo: "⚡", fields: ["webhookUrl"] },
+  { id: "whatsapp", name: "WhatsApp Business", logo: "ðŸ’¬", fields: ["phoneId", "token"] },
+  { id: "stripe", name: "Stripe", logo: "ðŸ’³", fields: ["publishable", "secret"] },
+  { id: "wipay", name: "WiPay (JMD)", logo: "ðŸ‡¯ðŸ‡²", fields: ["accountNumber", "apiKey"] },
+  { id: "meta", name: "Meta / Instagram", logo: "ðŸ“˜", fields: ["pageToken", "pageId"] },
+  { id: "mailchimp", name: "Mailchimp", logo: "ðŸ“§", fields: ["apiKey", "listId"] },
+  { id: "google-calendar", name: "Google Calendar", logo: "ðŸ“…", fields: ["apiKey", "calendarId"] },
+  { id: "slack", name: "Slack Alerts", logo: "ðŸ’¼", fields: ["webhookUrl"] },
+  { id: "zapier", name: "Zapier", logo: "âš¡", fields: ["webhookUrl"] },
 ];
 
 function StartWizard() {
@@ -45,7 +46,7 @@ function StartWizard() {
 
   // Apply a ?system= preset exactly once. Without this guard the effect re-ran on
   // every render (useSearchParams returns a fresh identity each pass) and setBrand
-  // created a new object each time → infinite render loop that froze the page.
+  // created a new object each time â†’ infinite render loop that froze the page.
   // Read the raw value so `search` doesn't need to be a reactive dependency.
   const presetSystem = search.get("system");
   useEffect(() => {
@@ -63,7 +64,7 @@ function StartWizard() {
   const onLogo = (file: File | undefined) => {
     if (!file) return;
     if (file.size > 1.5 * 1024 * 1024) {
-      setError("Logo too large — keep it under 1.5MB");
+      setError("Logo too large â€” keep it under 1.5MB");
       return;
     }
     setError("");
@@ -90,6 +91,8 @@ function StartWizard() {
     setLaunching(true);
     setError("");
     try {
+      const rawSlug = slugify(biz.businessName || system.shortName);
+      const demoSlug = rawSlug.startsWith("demo-") ? rawSlug : `demo-${rawSlug}`;
       const tenant = createTenant({
         businessName: biz.businessName || `${system.shortName} Co.`,
         systemSlug: system.slug,
@@ -99,6 +102,7 @@ function StartWizard() {
         city: biz.city || undefined,
         brand,
         apiConnections,
+        slugOverride: demoSlug,
       });
       setTimeout(() => router.push(`/app/${tenant.slug}`), 700);
     } catch (err) {
@@ -139,7 +143,7 @@ function StartWizard() {
         </div>
       </div>
 
-      {/* Step 0 — system */}
+      {/* Step 0 â€” system */}
       {step === 0 && (
         <div className="animate-rise grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {SYSTEMS.map((s) => {
@@ -173,7 +177,7 @@ function StartWizard() {
         </div>
       )}
 
-      {/* Step 1 — business */}
+      {/* Step 1 â€” business */}
       {step === 1 && system && (
         <Card className="animate-rise mx-auto max-w-xl p-6 md:p-8">
           <div className="mb-5 flex items-center gap-3">
@@ -196,14 +200,14 @@ function StartWizard() {
                 <Input type="email" value={biz.email} onChange={(e) => setBiz((b) => ({ ...b, email: e.target.value }))} placeholder="you@business.com" />
               </Field>
               <Field label="Phone / WhatsApp">
-                <Input value={biz.phone} onChange={(e) => setBiz((b) => ({ ...b, phone: e.target.value }))} placeholder="(876) …" />
+                <Input value={biz.phone} onChange={(e) => setBiz((b) => ({ ...b, phone: e.target.value }))} placeholder="(876) â€¦" />
               </Field>
             </div>
           </div>
         </Card>
       )}
 
-      {/* Step 2 — brand */}
+      {/* Step 2 â€” brand */}
       {step === 2 && system && (
         <div className="animate-rise grid items-start gap-6 lg:grid-cols-[1fr_1fr]">
           <Card className="p-6">
@@ -295,7 +299,7 @@ function StartWizard() {
 
           {/* Live preview */}
           <div className="lg:sticky lg:top-24">
-            <p className="eyebrow mb-2">Live preview — this is YOUR app</p>
+            <p className="eyebrow mb-2">Live preview â€” this is YOUR app</p>
             <div className="overflow-hidden rounded-3xl border border-line shadow-pop">
               <div className="flex items-center gap-2.5 px-5 py-4" style={{ background: brand.color }}>
                 {brand.logoDataUrl ? (
@@ -332,10 +336,10 @@ function StartWizard() {
         </div>
       )}
 
-      {/* Step 3 — connect tools */}
+      {/* Step 3 â€” connect tools */}
       {step === 3 && system && (
         <div className="animate-rise mx-auto max-w-2xl">
-          <p className="mb-1 text-center text-sm font-medium">Connect your existing tools <span className="text-muted">(optional — skip if you want to add later)</span></p>
+          <p className="mb-1 text-center text-sm font-medium">Connect your existing tools <span className="text-muted">(optional â€” skip if you want to add later)</span></p>
           <p className="mb-6 text-center text-[12px] text-muted">All credentials stay local during your trial. They move to an encrypted vault when you go live.</p>
           <div className="grid gap-3 sm:grid-cols-2">
             {QUICK_INTEGRATIONS.map((qi) => {
@@ -372,11 +376,11 @@ function StartWizard() {
               );
             })}
           </div>
-          <p className="mt-4 text-center text-[11px] text-muted">More integrations available inside Settings → Integrations after launch.</p>
+          <p className="mt-4 text-center text-[11px] text-muted">More integrations available inside Settings â†’ Integrations after launch.</p>
         </div>
       )}
 
-      {/* Step 4 — review & launch */}
+      {/* Step 4 â€” review & launch */}
       {step === 4 && system && (
         <Card className="animate-rise mx-auto max-w-xl p-8 text-center">
           <span className="mx-auto flex size-16 items-center justify-center rounded-3xl" style={{ background: `${brand.color}18` }}>
@@ -390,18 +394,18 @@ function StartWizard() {
               ["AI chatbot + voice agent", "answering & booking 24/7"],
               ["Starter demo data", "so every screen makes sense (clear it anytime)"],
               ...(apiConnections.length > 0 ? [[`${apiConnections.length} integration${apiConnections.length > 1 ? "s" : ""} connected`, apiConnections.map(c => c.id).join(", ")]] : []),
-              ["3-day free trial", "no card — continue only if you love it"],
+              ["3-day free trial", "no card â€” continue only if you love it"],
             ].map(([t, b]) => (
               <p key={t} className="flex items-start gap-2.5">
                 <Check className="mt-0.5 size-4.5 shrink-0 text-ok" />
                 <span>
-                  <strong>{t}</strong> <span className="text-muted">— {b}</span>
+                  <strong>{t}</strong> <span className="text-muted">â€” {b}</span>
                 </span>
               </p>
             ))}
           </div>
           <Button size="lg" className="mt-7 w-full" style={{ background: brand.color, color: "#fff" }} disabled={launching} onClick={launch}>
-            {launching ? "Building your workspace…" : "Launch my workspace 🚀"}
+            {launching ? "Building your workspaceâ€¦" : "Launch my workspace ðŸš€"}
           </Button>
           {error && <p className="mt-3 text-xs text-danger">{error}</p>}
           <p className="mt-3 text-[11px] text-muted">Created instantly on this device. Cloud sync + team logins activate when you continue after the trial.</p>
@@ -428,9 +432,10 @@ export default function StartPage() {
     <div className="container-x py-12 md:py-16">
       <h1 className="text-center font-display text-3xl font-bold tracking-tight sm:text-4xl">Launch your workspace</h1>
       <p className="mt-2 text-center text-sm text-muted">Free for 3 days. Branded in 60 seconds. Yours from the first click.</p>
-      <Suspense fallback={<div className="py-20 text-center text-sm text-muted">Loading…</div>}>
+      <Suspense fallback={<div className="py-20 text-center text-sm text-muted">Loadingâ€¦</div>}>
         <StartWizard />
       </Suspense>
     </div>
   );
 }
+
