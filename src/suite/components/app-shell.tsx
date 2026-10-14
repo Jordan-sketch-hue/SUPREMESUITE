@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-/* APP SHELL — the white-labeled workspace chrome.
+/* APP SHELL â€” the white-labeled workspace chrome.
    The sidebar renders ONLY the modules the active system pack declares, so a
    Courier CRM and a School CRM feel purpose-built while sharing one engine. */
 
@@ -33,6 +33,7 @@ import type { SystemDef, SystemModule, Tenant } from "../types";
 import { cx } from "./ui";
 import { TenantLogo } from "./brand-provider";
 import { TrialBanner, Paywall } from "./trial-gate";
+import { isDemo, isPaid } from "../lib/trial";
 import { InstallButton } from "./install-pwa";
 
 const MODULE_NAV: Partial<
@@ -201,10 +202,10 @@ export function AppShell({
           </div>
         </header>
 
-        <main className="flex-1 px-4 py-6 lg:px-8">{children}</main>
+        <main className={cx("flex-1 px-4 py-6 lg:px-8", tenant && isDemo(tenant) && !isPaid(tenant) && "pb-20")}>{children}</main>
 
         <footer className="border-t border-line px-4 py-4 text-center text-[11px] text-muted lg:px-8">
-          Powered by <span className="font-semibold text-ink">Supreme Suite</span> · a J Supreme Tech product ·{" "}
+          Powered by <span className="font-semibold text-ink">Supreme Suite</span> Â· a J Supreme Tech product Â·{" "}
           <Link href="/status" className="underline-offset-2 hover:underline">
             system status
           </Link>
@@ -236,3 +237,4 @@ export function PageHead({
     </div>
   );
 }
+
